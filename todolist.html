@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>To-Do List Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e6f7ff;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 75%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            float: left;
+        }
+
+        .addBtn {
+            width: 25%;
+            padding: 10px;
+            background-color: #66b3ff; 
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            float: left;
+        }
+
+        .addBtn:hover {
+            background-color: #3399ff;
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+        }
+
+        ul li {
+            background: #f9f9f9; 
+            margin: 5px 0;
+            padding: 12px;
+            font-size: 18px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        ul li.checked {
+            text-decoration: line-through;
+            background: #d9f2d9;
+            color: #155724;
+        }
+
+        ul li .close {
+            color: #e3342f;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        ul li .edit {
+            color: #ffc107;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .filters {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .filters button {
+            padding: 10px;
+            margin: 5px;
+            background-color: #66b3ff; 
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .filters button:hover {
+            background-color: #3399ff; 
+        }
+
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>My To-Do List</h2>
+
+    <div class="clearfix">
+        <input type="text" id="myInput" placeholder="Title...">
+        <button class="addBtn" onclick="addTask()">Add</button>
+    </div>
+
+    <ul id="myUL">
+        <!-- List of tasks will appear here -->
+    </ul>
+
+    <div class="filters">
+        <button onclick="filterTasks('all')">All</button>
+        <button onclick="filterTasks('completed')">Completed</button>
+        <button onclick="filterTasks('pending')">Pending</button>
+    </div>
+</div>
+
+<script>
+// JavaScript code implementing the functionality
+
+// Function to add a new task
+const addTask = () => {
+    const input = document.getElementById('myInput');
+    const taskText = input.value.trim();
+    
+    if (taskText === '') {
+        alert('Please enter a task.');
+        return;
+    }
+
+    const ul = document.getElementById('myUL');
+    const li = document.createElement('li');
+    li.textContent = taskText;
+
+    const editSpan = document.createElement('span');
+    editSpan.textContent = '✎';
+    editSpan.className = 'edit';
+    editSpan.onclick = () => editTask(li);
+
+    const closeSpan = document.createElement('span');
+    closeSpan.textContent = '×';
+    closeSpan.className = 'close';
+    closeSpan.onclick = () => deleteTask(li);
+
+    li.appendChild(editSpan);
+    li.appendChild(closeSpan);
+
+    li.addEventListener('click', () => toggleTaskCompletion(li));
+
+    ul.appendChild(li);
+
+    input.value = '';
+};
+
+// Function to toggle task completion
+const toggleTaskCompletion = (li) => {
+    li.classList.toggle('checked');
+};
+
+// Function to delete a task
+const deleteTask = (li) => {
+    li.remove();
+};
+
+// Function to edit a task
+const editTask = (li) => {
+    const newValue = prompt('Edit your task:', li.childNodes[0].textContent);
+    if (newValue !== null) {
+        li.childNodes[0].textContent = newValue;
+    }
+};
+
+// Function to filter tasks
+const filterTasks = (status) => {
+    const tasks = document.querySelectorAll('#myUL li');
+    tasks.forEach((task) => {
+        switch (status) {
+            case 'all':
+                task.style.display = 'flex';
+                break;
+            case 'completed':
+                task.style.display = task.classList.contains('checked') ? 'flex' : 'none';
+                break;
+            case 'pending':
+                task.style.display = task.classList.contains('checked') ? 'none' : 'flex';
+                break;
+        }
+    });
+};
+</script>
+
+</body>
+</html>
